@@ -35,7 +35,7 @@ def parse_student_info(text: str) -> tuple[str | None, str | None, str | None]:
     name_tokens = [t for t in tokens if not re.search(r"\d", t)]
 
     if not card_tokens:
-        return None, None, "⚠️ ما قدرت لاقي رقم بطاقة الاشتراك. اكتبه بسطر لحاله تحت الاسم."
+        return None, None, "⚠️ رقم الاشتراك غير موجود."
     if len(card_tokens) > 1:
         return None, None, "⚠️ اكتب رقم بطاقة الاشتراك بدون فراغات بين الأرقام."
     card = card_tokens[0].strip("-#")
@@ -51,7 +51,7 @@ async def reg_begin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     if update.callback_query:
         await update.callback_query.answer()
     if user.id in ADMIN_IDS:
-        await context.bot.send_message(user.id, "حساب الآنسة ما بيقدر يسجّل كطالب.")
+        await context.bot.send_message(user.id, "حساب الآدمن ما بيقدر يسجّل كطالب.")
         return ConversationHandler.END
     context.user_data["reg"] = {}
     await context.bot.send_message(
@@ -74,7 +74,7 @@ async def reg_info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         return INFO
     context.user_data["reg"] = {"full_name": name, "card_number": card}
     await update.message.reply_text(
-        f"👤 {e(name)}\n🪪 {e(card)}\n\n<b>اختار الآنسة:</b>", reply_markup=teacher_buttons()
+        f"👤 {e(name)}\n🪪 {e(card)}\n\n<b>اختار المقرر:</b>", reply_markup=teacher_buttons()
     )
     return SUBJECT
 
