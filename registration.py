@@ -14,7 +14,7 @@ from keyboards import BTN_REGISTER, BTN_STATUS, MENU_FILTER, main_keyboard, reg_
 from utils import e, safe_send, student_card
 
 INFO, SUBJECT, CONFIRM = range(3)  # حالات المحادثة
-INFO_EXAMPLE = "محمد أحمد الخطيب\n12345"
+INFO_EXAMPLE = "مجد غسان القيم\n12345"
 ARABIC_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789")
 
 
