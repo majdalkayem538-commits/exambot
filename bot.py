@@ -1,34 +1,5 @@
-"""
-بوت اختبارات تلغرام — مادتين، لكل مادة آنسة (أدمن)، وعدد غير محدود من الاختبارات، لكل اختبار ملف حلول.
-
-مسار الطالب:
-  تسجيل (اسم ثلاثي + رقم بطاقة الاشتراك برسالة وحدة) -> بيختار الآنسة -> طلب برقم بيروح للآنسة
-  -> موافقة -> بيختار اختبار وبيستلم ملفه -> بيضغط «لقد أنهيت الحل»
-  -> البوت بيبعتلو ملف الحلول تلقائياً.
-
-كل شي بيبعتو البوت محمي (protect_content): ممنوع التحويل والحفظ ونسخ النص،
-ولقطة الشاشة ممنوعة على أندرويد.
-"""
 
 from __future__ import annotations
-
-# ================================================================
-#   ⚙️  الإعدادات — عدّل هون بس
-#   (على Render ما في داعي تعدّل هون: القيم بتنحط من لوحة Render)
-# ================================================================
-BOT_TOKEN = "حط_توكن_البوت_هون"          # من @BotFather
-
-# الـ ID الرقمي لكل آنسة (بتجيبه من @userinfobot)
-SAMARA_ID = 111111111                    # الآنسة سمارا — التحليل الكلي
-ZAINAB_ID = 222222222                    # الآنسة زينب — الرياضيات الاقتصادية
-
-DB_PATH = "exam_bot.db"
-
-SUBJECT_CONFIG = {
-    "s1": {"name": "التحليل الكلي", "teacher": "سمارا", "admin": SAMARA_ID},
-    "s2": {"name": "الرياضيات الاقتصادية", "teacher": "زينب", "admin": ZAINAB_ID},
-}
-# ================================================================
 
 import subprocess
 import sys
@@ -73,16 +44,34 @@ logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s: %(message)s", le
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger("exam_bot")
 
-# متغيرات البيئة (متل على Render) بتغلب على القيم فوق
-BOT_TOKEN = os.getenv("BOT_TOKEN", BOT_TOKEN)
-DB_PATH = os.getenv("DB_PATH", DB_PATH)
+# ---------------------------------------------------------------- قراءة الإعدادات من الـ Environment
+def env_required(name: str) -> str:
+    value = os.getenv(name, "").strip()
+    if not value:
+        sys.exit(f"⚠️ المتغير {name} مو موجود بالـ Environment. ضيفه وأعد التشغيل.")
+    return value
 
+
+def env_int(name: str) -> int:
+    value = env_required(name)
+    if not value.lstrip("-").isdigit():
+        sys.exit(f"⚠️ المتغير {name} لازم يكون رقم (الـ ID الرقمي من @userinfobot)، مو '{value}'.")
+    return int(value)
+
+
+BOT_TOKEN = env_required("BOT_TOKEN")
+DB_PATH = os.getenv("DB_PATH", "exam_bot.db").strip() or "exam_bot.db"
+
+SUBJECT_DEFAULTS = {
+    "s1": ("التحليل الكلي", "سمارا"),
+    "s2": ("الرياضيات الاقتصادية", "زينب"),
+}
 SUBJECTS: dict[str, dict] = {}
-for i, (key, cfg) in enumerate(SUBJECT_CONFIG.items(), start=1):
+for i, (key, (default_name, default_teacher)) in enumerate(SUBJECT_DEFAULTS.items(), start=1):
     SUBJECTS[key] = {
-        "name": os.getenv(f"SUBJECT_{i}_NAME", cfg["name"]),
-        "teacher": os.getenv(f"SUBJECT_{i}_TEACHER", cfg["teacher"]),
-        "admin": int(os.getenv(f"SUBJECT_{i}_ADMIN_ID", cfg["admin"])),
+        "name": os.getenv(f"SUBJECT_{i}_NAME", "").strip() or default_name,
+        "teacher": os.getenv(f"SUBJECT_{i}_TEACHER", "").strip() or default_teacher,
+        "admin": env_int(f"SUBJECT_{i}_ADMIN_ID"),
     }
 
 ADMIN_SUBJECTS: dict[int, list[str]] = {}
@@ -951,7 +940,7 @@ async def set_commands(app: Application) -> None:
 
 def main() -> None:
     if ":" not in BOT_TOKEN:
-        sys.exit("⚠️ حط توكن البوت بـ BOT_TOKEN بأول الملف.")
+        sys.exit("⚠️ قيمة BOT_TOKEN مو صحيحة. انسخها كاملة من @BotFather.")
     init_db()
     app = (
         Application.builder()
