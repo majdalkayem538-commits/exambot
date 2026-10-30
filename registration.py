@@ -1,5 +1,3 @@
-"""محادثة تسجيل الطالب: الاسم والبطاقة برسالة وحدة ← اختيار الآنسة ← تأكيد."""
-
 from __future__ import annotations
 
 import re
@@ -14,7 +12,7 @@ from keyboards import BTN_REGISTER, BTN_STATUS, MENU_FILTER, main_keyboard, reg_
 from utils import e, safe_send, student_card
 
 INFO, SUBJECT, CONFIRM = range(3)  # حالات المحادثة
-INFO_EXAMPLE = "محمد أحمد الخطيب\n12345"
+INFO_EXAMPLE = "مجد غسان القيم\n12345"
 ARABIC_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789")
 
 
@@ -51,7 +49,7 @@ async def reg_begin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     if update.callback_query:
         await update.callback_query.answer()
     if user.id in ADMIN_IDS:
-        await context.bot.send_message(user.id, "حساب الآنسة ما بيقدر يسجّل كطالب.")
+        await context.bot.send_message(user.id, "حساب الادمن ما بيقدر يسجّل كطالب.")
         return ConversationHandler.END
     context.user_data["reg"] = {}
     await context.bot.send_message(
