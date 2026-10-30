@@ -1,17 +1,3 @@
-"""الإعدادات: بتنقرا كلها من الـ Environment.
-
-مطلوبة:
-  BOT_TOKEN            توكن البوت من @BotFather
-  SUBJECT_1_ADMIN_ID   الـ ID الرقمي للآنسة سمارا (من @userinfobot)
-  SUBJECT_2_ADMIN_ID   الـ ID الرقمي للآنسة زينب
-
-اختيارية (إلها قيم افتراضية):
-  SUBJECT_1_NAME / SUBJECT_1_TEACHER   (التحليل الكلي / سمارا)
-  SUBJECT_2_NAME / SUBJECT_2_TEACHER   (الرياضيات الاقتصادية / زينب)
-  DB_PATH                              (exam_bot.db — على Render: /var/data/exam_bot.db)
-  OWNER_ID                             الـ ID تبعك كصاحب البوت: بتشوف إحصائيات كل المواد
-"""
-
 from __future__ import annotations
 
 import logging
@@ -68,7 +54,7 @@ for key, s in SUBJECTS.items():
 ADMIN_IDS = set(ADMIN_SUBJECTS)
 
 REQ_LABELS = {
-    "pending": "⏳ بانتظار موافقة الآنسة",
+    "pending": "⏳ بانتظار الموافقة",
     "rejected": "❌ مرفوض",
     "approved": "✅ مقبول",
 }
