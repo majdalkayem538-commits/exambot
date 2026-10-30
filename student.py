@@ -17,7 +17,7 @@ async def my_exams(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not approved:
         await update.message.reply_text(
             "ما عندك تسجيل مقبول لسّا.\n"
-            f"سجّل من «{BTN_REGISTER}»، أو استنى موافقة الآنسة وشوف حالتك من «{BTN_STATUS}»."
+            f"سجّل من «{BTN_REGISTER}»، أو استنى موافقة الادمن وشوف حالتك من «{BTN_STATUS}»."
         )
         return
     if len(approved) == 1:
