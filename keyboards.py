@@ -11,7 +11,7 @@ from utils import e
 
 # ---------------------------------------------------------------- الأزرار الثابتة (تحت مكان الكتابة)
 BTN_EXAMS = "📚 اختباراتي"
-BTN_REGISTER = "📝 تسجيل عند آنسة"
+BTN_REGISTER = "📝 تسجيل على مقرر"
 BTN_STATUS = "📋 حالة طلباتي"
 BTN_UP_EXAM = "📤 رفع اختبار"
 BTN_UP_SOL = "📤 رفع حلول"
@@ -83,7 +83,7 @@ def nav_row(page: int, pages: int, prefix: str) -> list[InlineKeyboardButton]:
 def exams_menu(req, page: int = 0) -> tuple[str, InlineKeyboardMarkup | None]:
     available = uploaded_nums(req["subject"], "exam")
     if not available:
-        return "لسّا ما في اختبارات مرفوعة لهي المادة. جرّب بعد شوي.", None
+        return "لسّا ما في اختبارات مرفوعة لهي المادة. .", None
     status = {r["exam_num"]: r["status"] for r in q_all(
         "SELECT exam_num, status FROM attempts WHERE request_id = ?", (req["id"],))}
     items, page, pages = page_slice(available, page, PAGE_STUDENT)
